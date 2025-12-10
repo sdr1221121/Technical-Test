@@ -24,15 +24,21 @@ class ArticleRepository {
     }
 
     add(article) {
-        const data = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
-        const newArticle = new Article({
-            id: data.length > 0 ? data[data.length - 1].id + 1 : 1,
-            ...article
-        });
-        data.push(newArticle);
-        fs.writeFileSync(FILE_PATH, JSON.stringify(data, null, 2));
-        return newArticle;
-    }
+    const data = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
+
+    const maxId = data.reduce((max, a) => (a.id > max ? a.id : max), 0);
+
+    const newArticle = new Article({
+        id: maxId + 1,
+        ...article
+    });
+
+    data.push(newArticle);
+    fs.writeFileSync(FILE_PATH, JSON.stringify(data, null, 2));
+
+    return newArticle;
+}
+
 }
 
 export default new ArticleRepository();

@@ -1,47 +1,25 @@
-import { pipeline } from '@xenova/transformers';
+import { pipeline } from "@huggingface/transformers";
 
 export async function generateArticleAi() {
-const generator = await pipeline(
-  "text-generation",
-  "Xenova/pythia-160m"
-);
+  const generator = await pipeline(
+    "text-generation",
+    "HuggingFaceTB/SmolLM2-135M-Instruct"
+  );
 
+  const messages = [
+    {
+      role: "system",
+      content: "You are a helpful assistant that writes well-structured articles in JSON format."
+    },
+    { role: "title", content: "choose a title about technology" },
+    { role: "content", content: "talk about technology" }
+  ];
 
-const prompt = `
-Write a random article as a JSON object with these keys:
-id (integer), title (string), content (string), date (ISO string).
-Example:
-{
-  "id": 123,
-  "title": "Sample",
-  "content": "Some text",
-  "date": "2025-12-08T22:00:00Z"
-}
-Your output:
-`;
+  const output = await generator(messages, {
+    max_new_tokens: 300,
+    temperature: 1.3,
+    top_p: 0.9
+  });
 
-  const output = await generator(prompt, { max_new_tokens: 128 });
-
-  const text = output[0].generated_text;
-    console.log("JSON match from model output:", text);
-
-
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-    console.log("JSON match from model output:", jsonMatch);
-
-  if (!jsonMatch) {
-    throw new Error("Model did not return valid JSON.");
-  }
-
-  const article = JSON.parse(jsonMatch[0]);
-
-  if (!article.id) {
-    article.id = Math.floor(Math.random() * 1000000);
-  }
-
-  if (!article.date) {
-    article.date = new Date().toISOString();
-  }
-
-  return article;
+  return output[0].generated_text.at(-1).content;
 }

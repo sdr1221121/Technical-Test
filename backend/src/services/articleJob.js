@@ -11,17 +11,21 @@ export function getArticle(id) {
 }
 
 export async function generateArticle() {
-  const article = await generateArticleAi();
+  const content = await generateArticleAi();
+
   const newArticle = ArticleRepo.add({
-    id: article.id,
-    title: article.title,
-    content: article.content,
-    date: article.date,
+    title: "Technology",
+    content: content,
+    date: new Date().toISOString(),
   });
 
   return newArticle;
 }
 
-cron.schedule("0 14 * * *",()=>{
-   generateArticle();
-})
+cron.schedule("39 15 * * *", () => {
+  (async () => {
+    for (let i = 0; i < 3; i++) {
+      await generateArticle();
+    }
+  })();
+});
