@@ -22,10 +22,8 @@ export async function generateArticle() {
   return newArticle;
 }
 
-cron.schedule("39 15 * * *", () => {
+cron.schedule("0 0 * * *", () => {
   (async () => {
-    for (let i = 0; i < 3; i++) {
       await generateArticle();
-    }
   })();
 });
