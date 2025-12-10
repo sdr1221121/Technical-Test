@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: backend-assimetria
+    ports:
+      - "5000:5000"
+    volumes:
+     - ../backend:/usr/src/app
+     - /usr/src/app/node_modules
+    command: ["node", "src/App.js"]
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: frontend-assimetria
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/usr/src/app
+    command: ["npm", "start"]
