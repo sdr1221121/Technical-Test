@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the architecture of the "Assimetria" project, including backend, frontend, deployment, and automation details.
+This document describes the architecture of the "Assimetria" project, including backend, frontend, deployment, automation, and AI model details.
 
 ---
 
@@ -23,6 +23,7 @@ This document describes the architecture of the "Assimetria" project, including 
   }
   ```
 * **CORS:** Enabled for frontend access
+* **AI Model Used:** HuggingFaceTB/SmolLM2-135M-Instruct (for article generation logic)
 
 ## Frontend
 
@@ -64,7 +65,7 @@ This document describes the architecture of the "Assimetria" project, including 
 * **Daily Article Generation:**
 
   * Uses `node-cron`
-  * Generates one new article per day
+  * Generates one new article per day using the HuggingFaceTB/SmolLM2-135M-Instruct model
 * **Initial Articles:** Minimum of 3 existing articles
 
 ## CodeBuild Flow
@@ -73,4 +74,3 @@ This document describes the architecture of the "Assimetria" project, including 
 2. CodeBuild pulls repo, builds Docker images, pushes to ECR
 3. EC2 pulls latest images and runs containers
 4. Application available via EC2 public IP
-
